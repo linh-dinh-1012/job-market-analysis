@@ -59,3 +59,10 @@ service_account.json
 # Docker
 # =========================
 docker-data/
+
+# =========================
+# Folders and to ignore
+# =========================
+ingestion_local/
+
+schema_job_market_analytics.png

@@ -123,8 +123,10 @@ def preprocess_ft(raw_items: list[dict]) -> pd.DataFrame:
         dep_code, city, latitude, longitude = parse_location(raw_location)
 
         rows.append({
-            "source_job_id": item.get("id"),
-            "url": item.get("origineOffre", {}).get("urlOrigine"),
+            "url": (
+                item.get("origineOffre", {}).get("urlOrigine")
+                or f"francetravail:{item.get('id')}"
+            ),
             "title": item.get("intitule"),
             "description": item.get("description"),
             "company": item.get("entreprise", {}).get("nom"),
@@ -206,7 +208,6 @@ def ingest_ft_to_postgres(
                 conn,
                 {
                     "company_id": company_id,
-                    "source_job_id": row["source_job_id"],
                     "url": row["url"],
                     "title": row["title"],
                     "description": row["description"],

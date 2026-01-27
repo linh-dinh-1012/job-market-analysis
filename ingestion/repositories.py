@@ -6,20 +6,18 @@ def get_or_create_company(conn, name: str) -> int:
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT id
-            FROM company
+            SELECT id FROM public.company
             WHERE name = %s
             """,
             (name,),
         )
         row = cur.fetchone()
-
         if row:
             return row[0]
 
         cur.execute(
             """
-            INSERT INTO company (name)
+            INSERT INTO public.company (name)
             VALUES (%s)
             RETURNING id
             """,
@@ -34,11 +32,11 @@ def get_or_create_company(conn, name: str) -> int:
 
 def get_or_create_job_offer(conn, data: dict) -> int:
     with conn.cursor() as cur:
-        # 1. Check existence (unicité par URL)
+        # 1. Check existence via URL
         cur.execute(
             """
             SELECT id
-            FROM job_offer
+            FROM public.job_offer
             WHERE url = %s
             """,
             (data["url"],),
@@ -50,7 +48,7 @@ def get_or_create_job_offer(conn, data: dict) -> int:
             job_offer_id = row[0]
             cur.execute(
                 """
-                UPDATE job_offer
+                UPDATE public.job_offer
                 SET
                     title = %s,
                     description = %s,
@@ -86,7 +84,7 @@ def get_or_create_job_offer(conn, data: dict) -> int:
         # 3. INSERT si nouveau
         cur.execute(
             """
-            INSERT INTO job_offer (
+            INSERT INTO public.job_offer (
                 title,
                 description,
                 salary_min_annual,
@@ -128,20 +126,18 @@ def get_or_create_skill(conn, name: str, category: str) -> int:
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT id
-            FROM skill
+            SELECT id FROM public.skill
             WHERE name = %s AND category = %s
             """,
             (name, category),
         )
         row = cur.fetchone()
-
         if row:
             return row[0]
 
         cur.execute(
             """
-            INSERT INTO skill (name, category)
+            INSERT INTO public.skill (name, category)
             VALUES (%s, %s)
             RETURNING id
             """,
@@ -150,16 +146,11 @@ def get_or_create_skill(conn, name: str, category: str) -> int:
         return cur.fetchone()[0]
 
 
-def link_job_offer_skill(
-    conn,
-    job_offer_id: int,
-    skill_id: int,
-    requirement_level: str,
-):
+def link_job_offer_skill(conn, job_offer_id: int, skill_id: int, requirement_level: str):
     with conn.cursor() as cur:
         cur.execute(
             """
-            INSERT INTO job_offer_skill (
+            INSERT INTO public.job_offer_skill (
                 job_offer_id,
                 skill_id,
                 requirement_level
@@ -169,6 +160,7 @@ def link_job_offer_skill(
             """,
             (job_offer_id, skill_id, requirement_level),
         )
+
 
 # ==================================================
 # Location
@@ -199,7 +191,7 @@ def get_or_create_location(
         # 2. Insert new location
         cur.execute(
             """
-            INSERT INTO location (
+            INSERT INTO public.location (
                 ville,
                 code_postal,
                 latitude,
@@ -236,7 +228,7 @@ def get_or_create_industry(conn, name: str | None) -> int | None:
 
         cur.execute(
             """
-            INSERT INTO industry (name)
+            INSERT INTO public.industry (name)
             VALUES (%s)
             RETURNING id
             """,
@@ -268,7 +260,7 @@ def get_or_create_contract(conn, label: str | None) -> int | None:
 
         cur.execute(
             """
-            INSERT INTO contract (type_contrat)
+            INSERT INTO public.contract (type_contrat)
             VALUES (%s)
             RETURNING id
             """,

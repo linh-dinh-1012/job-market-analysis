@@ -1,20 +1,17 @@
+import os
 import psycopg2
-from config import settings
 
 
 def get_connection():
     """
-    Return a PostgreSQL connection using settings from the configuration.
+    Return a PostgreSQL connection to Supabase
     """
-    if settings.DATABASE_URL:
-        conn = psycopg2.connect(settings.DATABASE_URL)
-    else:
-        conn = psycopg2.connect(
-            host=settings.DB_HOST,
-            dbname=settings.DB_NAME,
-            user=settings.DB_USER,
-            password=settings.DB_PASSWORD,
-            port=settings.DB_PORT,
-        )
-    conn.autocommit = False
+    conn = psycopg2.connect(
+        host=os.environ["DB_HOST"],      
+        dbname=os.environ["DB_NAME"],    
+        user=os.environ["DB_USER"],      
+        password=os.environ["DB_PASSWORD"],
+        port=int(os.environ.get("DB_PORT", 5432)),
+        sslmode="require",               
+    )
     return conn

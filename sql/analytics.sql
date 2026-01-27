@@ -133,6 +133,7 @@ SELECT
     ) AS pct_avec_salaire,
     MIN(salary_min_annual) AS salaire_min,
     MAX(salary_max_annual) AS salaire_max
-FROM job_offer
-WHERE location ILIKE '%paris%';
+FROM job_offer jo
+JOIN location l ON l.id = jo.location_id
+WHERE l.ville LIKE 'Paris';
 
