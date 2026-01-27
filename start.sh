@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-python manage.py migrate --noinput
-python manage.py collectstatic --noinput || true
+python manage.py migrate
+python manage.py collectstatic --noinput
+python manage.py shell -c "from create_superuser import run; run()"
 
-gunicorn backend.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --threads 4 --timeout 120
+gunicorn backend.wsgi:application --bind 0.0.0.0:10000
