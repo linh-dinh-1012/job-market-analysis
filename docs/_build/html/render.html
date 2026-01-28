@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Déploiement de l’API sur Render (Docker) &mdash; Documentation Job Market Analysis </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d1a510d7"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Application Streamlit (exploration et validation)" href="streamlit_app.html" />
+    <link rel="prev" title="Hébergement PostgreSQL sur Supabase" href="supabase.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Market Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Déploiement de l’API sur Render (Docker)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-de-deploiement">Architecture de déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pre-requis">Pré-requis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-des-variables-d-environnement">Configuration des variables d’environnement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processus-de-deploiement">Processus de déploiement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#phase-de-build">1) Phase de build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#phase-de-run">2) Phase de run</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verifications-post-deploiement">Vérifications post-déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remarques">Remarques</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Market Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Déploiement de l’API sur Render (Docker)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/render.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deploiement-de-l-api-sur-render-docker">
+<h1>Déploiement de l’API sur Render (Docker)<a class="headerlink" href="#deploiement-de-l-api-sur-render-docker" title="Lien vers cette rubrique"></a></h1>
+<section id="objectif">
+<h2>Objectif<a class="headerlink" href="#objectif" title="Lien vers cette rubrique"></a></h2>
+<p>Déployer l’API développée avec <strong>Django REST Framework</strong> sous forme
+de service web conteneurisé, et la connecter à une base PostgreSQL
+hébergée sur <strong>Supabase</strong>.</p>
+<p>Le déploiement repose sur <strong>Docker</strong>, garantissant la portabilité
+et la reproductibilité de l’environnement d’exécution.</p>
+<p>—</p>
+</section>
+<section id="architecture-de-deploiement">
+<h2>Architecture de déploiement<a class="headerlink" href="#architecture-de-deploiement" title="Lien vers cette rubrique"></a></h2>
+<ul class="simple">
+<li><p>Application : Django + Django REST Framework</p></li>
+<li><p>Conteneurisation : Docker (image construite à partir du <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>)</p></li>
+<li><p>Plateforme de déploiement : Render (Web Service)</p></li>
+<li><p>Base de données : PostgreSQL (Supabase)</p></li>
+<li><p>Accès externe : API REST exposée via HTTPS</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/render.png"><img alt="Architecture de déploiement Render" class="align-center" src="_images/render.png" style="width: 90%;" />
+</a>
+<p><em>(Schéma d’architecture à insérer ultérieurement)</em></p>
+<p>—</p>
+</section>
+<section id="pre-requis">
+<h2>Pré-requis<a class="headerlink" href="#pre-requis" title="Lien vers cette rubrique"></a></h2>
+<ul class="simple">
+<li><p>Un <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> définissant l’environnement d’exécution de l’API.</p></li>
+<li><p>Un script de démarrage (ex. <code class="docutils literal notranslate"><span class="pre">start.sh</span></code>) gérant :
+- l’application des migrations,
+- le lancement du serveur Django.</p></li>
+<li><p>Un fichier <code class="docutils literal notranslate"><span class="pre">render.yaml</span></code> ou une configuration équivalente via l’interface Render.</p></li>
+<li><p>Des variables d’environnement pour la configuration applicative et l’accès à la base.</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="configuration-des-variables-d-environnement">
+<h2>Configuration des variables d’environnement<a class="headerlink" href="#configuration-des-variables-d-environnement" title="Lien vers cette rubrique"></a></h2>
+<p>Les paramètres sensibles et dépendants de l’environnement sont injectés
+via les variables d’environnement Render :</p>
+<ul class="simple">
+<li><p>Connexion PostgreSQL (Supabase) :
+- <code class="docutils literal notranslate"><span class="pre">DB_HOST</span></code>
+- <code class="docutils literal notranslate"><span class="pre">DB_NAME</span></code>
+- <code class="docutils literal notranslate"><span class="pre">DB_USER</span></code>
+- <code class="docutils literal notranslate"><span class="pre">DB_PASSWORD</span></code>
+- <code class="docutils literal notranslate"><span class="pre">DB_PORT</span></code></p></li>
+<li><p>Paramètres Django :
+- <code class="docutils literal notranslate"><span class="pre">DJANGO_SECRET_KEY</span></code>
+- <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>
+- <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span></code></p></li>
+<li><p>Paramètres applicatifs spécifiques (ex. limites de collecte).</p></li>
+</ul>
+<p>Cette approche évite toute configuration en dur dans le code
+et facilite le passage entre environnements.</p>
+<p>—</p>
+</section>
+<section id="processus-de-deploiement">
+<h2>Processus de déploiement<a class="headerlink" href="#processus-de-deploiement" title="Lien vers cette rubrique"></a></h2>
+<p>Le déploiement est déclenché automatiquement à chaque nouveau commit
+sur la branche principale du dépôt GitHub.</p>
+<section id="phase-de-build">
+<h3>1) Phase de build<a class="headerlink" href="#phase-de-build" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Construction de l’image Docker à partir du <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p></li>
+<li><p>Installation des dépendances Python définies dans les fichiers
+<code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
+<li><p>Vérification de la cohérence de l’environnement d’exécution.</p></li>
+</ul>
+</section>
+<section id="phase-de-run">
+<h3>2) Phase de run<a class="headerlink" href="#phase-de-run" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Démarrage du conteneur.</p></li>
+<li><p>Exécution du script de démarrage :
+- application des migrations Django,
+- lancement du serveur d’application.</p></li>
+<li><p>Mise à disposition de l’API via l’URL publique fournie par Render.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="verifications-post-deploiement">
+<h2>Vérifications post-déploiement<a class="headerlink" href="#verifications-post-deploiement" title="Lien vers cette rubrique"></a></h2>
+<p>Après le déploiement, plusieurs vérifications sont effectuées :</p>
+<ul class="simple">
+<li><p>Accessibilité de l’URL publique du service Render.</p></li>
+<li><p>Appel d’un endpoint API simple (ex. liste d’offres) pour valider :
+- la connexion à la base PostgreSQL,
+- le bon fonctionnement de l’ORM et des serializers.</p></li>
+<li><p>Consultation des logs Render pour détecter :
+- erreurs de migration,
+- problèmes de connexion à la base,
+- erreurs d’import ou de configuration.</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="remarques">
+<h2>Remarques<a class="headerlink" href="#remarques" title="Lien vers cette rubrique"></a></h2>
+<p>Le service est déployé sur une instance gratuite Render, impliquant
+un arrêt automatique après une période d’inactivité.
+Ce comportement est pris en compte lors des tests de disponibilité
+et n’impacte pas les objectifs fonctionnels du projet.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="supabase.html" class="btn btn-neutral float-left" title="Hébergement PostgreSQL sur Supabase" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="streamlit_app.html" class="btn btn-neutral float-right" title="Application Streamlit (exploration et validation)" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2026, Linh Dinh.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

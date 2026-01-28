@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Streamlit (exploration et validation) &mdash; Documentation Job Market Analysis </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d1a510d7"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Glossaire" href="glossary.html" />
+    <link rel="prev" title="Déploiement de l’API sur Render (Docker)" href="render.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Market Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Application Streamlit (exploration et validation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connexion-aux-donnees">Connexion aux données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#structure-de-l-application">Structure de l’application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#onglet-marche">Onglet « Marché »</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Objectif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fonctionnalites">Fonctionnalités</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#onglet-competences">Onglet « Compétences »</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Objectif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Fonctionnalités</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#onglet-salaire">Onglet « Salaire »</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Objectif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Fonctionnalités</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#onglet-geographie">Onglet « Géographie »</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Objectif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Fonctionnalités</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#onglet-metiers-proches">Onglet « Métiers proches »</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Objectif</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methode">Méthode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resultat">Résultat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#role-dans-l-architecture-globale">Rôle dans l’architecture globale</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Market Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Application Streamlit (exploration et validation)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/streamlit_app.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="application-streamlit-exploration-et-validation">
+<h1>Application Streamlit (exploration et validation)<a class="headerlink" href="#application-streamlit-exploration-et-validation" title="Lien vers cette rubrique"></a></h1>
+<section id="objectif">
+<h2>Objectif<a class="headerlink" href="#objectif" title="Lien vers cette rubrique"></a></h2>
+<p>Développer une application interactive permettant :</p>
+<ul class="simple">
+<li><p>de valider le bon fonctionnement de la chaîne
+<strong>PostgreSQL → API → accès applicatif</strong>,</p></li>
+<li><p>d’explorer visuellement les données ingérées,</p></li>
+<li><p>de répondre aux principales questions analytiques du projet.</p></li>
+</ul>
+<p>L’application est construite avec le framework <strong>Streamlit</strong>,
+offrant une interface web simple à déployer et à utiliser.</p>
+<p>—</p>
+</section>
+<section id="connexion-aux-donnees">
+<h2>Connexion aux données<a class="headerlink" href="#connexion-aux-donnees" title="Lien vers cette rubrique"></a></h2>
+<p>L’application se connecte directement à la base PostgreSQL hébergée
+sur Supabase.</p>
+<p>La connexion utilise les mêmes paramètres que ceux configurés pour l’API Django REST,
+assurant la cohérence des accès.
+—</p>
+</section>
+<section id="structure-de-l-application">
+<h2>Structure de l’application<a class="headerlink" href="#structure-de-l-application" title="Lien vers cette rubrique"></a></h2>
+<p>L’interface est organisée en <strong>onglets thématiques</strong>, chacun
+correspondant à une question d’analyse.</p>
+<a class="reference internal image-reference" href="_images/streamlit_0.png"><img alt="Vue d'ensemble des onglets Streamlit" class="align-center" src="_images/streamlit_0.png" style="width: 90%;" />
+</a>
+<p>—</p>
+</section>
+<section id="onglet-marche">
+<h2>Onglet « Marché »<a class="headerlink" href="#onglet-marche" title="Lien vers cette rubrique"></a></h2>
+<section id="id1">
+<h3>Objectif<a class="headerlink" href="#id1" title="Lien vers cette rubrique"></a></h3>
+<p>Fournir une vue globale du marché de l’emploi étudié.</p>
+<a class="reference internal image-reference" href="_images/streamlit_marche.png"><img alt="Vue d'ensemble des onglets Streamlit" class="align-center" src="_images/streamlit_marche.png" style="width: 90%;" />
+</a>
+<a class="reference internal image-reference" href="_images/streamlit_2.png"><img alt="Top 5 des villes avec le plus d'offres d'emploi" class="align-center" src="_images/streamlit_2.png" style="width: 90%;" />
+</a>
+</section>
+<section id="fonctionnalites">
+<h3>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Calcul du nombre total d’offres distinctes.</p></li>
+<li><p>Affichage tabulaire des offres.</p></li>
+<li><p>Identification des localisations les plus représentées
+via un classement des villes.</p></li>
+</ul>
+<p>Cette vue permet de répondre à la question :
+<em>« Dans quelles zones géographiques se concentrent les offres ? »</em></p>
+<p>—</p>
+</section>
+</section>
+<section id="onglet-competences">
+<h2>Onglet « Compétences »<a class="headerlink" href="#onglet-competences" title="Lien vers cette rubrique"></a></h2>
+<section id="id2">
+<h3>Objectif<a class="headerlink" href="#id2" title="Lien vers cette rubrique"></a></h3>
+<p>Identifier les compétences les plus demandées et leur priorité relative.</p>
+<a class="reference internal image-reference" href="_images/streamlit_4.png"><img alt="Top 5 hard-skills les plus demandées" class="align-center" src="_images/streamlit_4.png" style="width: 90%;" />
+</a>
+<a class="reference internal image-reference" href="_images/streamlit_5.png"><img alt="Top 5 soft-skills les plus demandées" class="align-center" src="_images/streamlit_5.png" style="width: 90%;" />
+</a>
+</section>
+<section id="id3">
+<h3>Fonctionnalités<a class="headerlink" href="#id3" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Agrégation des compétences par catégorie :
+- compétences techniques (hard skills),
+- compétences comportementales (soft skills).</p></li>
+<li><p>Comptage du nombre d’offres associées à chaque compétence.</p></li>
+<li><p>Calcul du pourcentage d’offres concernées.</p></li>
+<li><p>Visualisation des compétences dominantes (tableaux et graphiques).</p></li>
+</ul>
+<p>Cet onglet répond à la question :
+<em>« Quelles compétences sont les plus fréquemment requises,
+et doivent être priorisées dans la préparation du profil ? »</em></p>
+<p>—</p>
+</section>
+</section>
+<section id="onglet-salaire">
+<h2>Onglet « Salaire »<a class="headerlink" href="#onglet-salaire" title="Lien vers cette rubrique"></a></h2>
+<section id="id4">
+<h3>Objectif<a class="headerlink" href="#id4" title="Lien vers cette rubrique"></a></h3>
+<p>Explorer la disponibilité et les bornes salariales.</p>
+<a class="reference internal image-reference" href="_images/streamlit_6.png"><img alt="Salaire minimum et maximum des offres d'emploi" class="align-center" src="_images/streamlit_6.png" style="width: 90%;" />
+</a>
+</section>
+<section id="id5">
+<h3>Fonctionnalités<a class="headerlink" href="#id5" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Calcul du nombre d’offres contenant une information salariale exploitable.</p></li>
+<li><p>Comparaison entre volume total d’offres et volume avec salaire renseigné.</p></li>
+<li><p>Affichage des bornes salariales annuelles lorsque disponibles.</p></li>
+</ul>
+<p>Cet onglet permet de répondre à la question :
+<em>« Quels niveaux de salaire minimum et maximum apparaissent dans les offres,
+afin de préparer les échanges avec les recruteurs ? »</em></p>
+<p>—</p>
+</section>
+</section>
+<section id="onglet-geographie">
+<h2>Onglet « Géographie »<a class="headerlink" href="#onglet-geographie" title="Lien vers cette rubrique"></a></h2>
+<section id="id6">
+<h3>Objectif<a class="headerlink" href="#id6" title="Lien vers cette rubrique"></a></h3>
+<p>Visualiser la répartition spatiale des offres d’emploi.</p>
+<a class="reference internal image-reference" href="_images/streamlit_3.png"><img alt="Répartition géographique des offres d'emploi" class="align-center" src="_images/streamlit_3.png" style="width: 90%;" />
+</a>
+</section>
+<section id="id7">
+<h3>Fonctionnalités<a class="headerlink" href="#id7" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Filtrage des offres disposant de coordonnées géographiques.</p></li>
+<li><p>Affichage cartographique interactif à l’aide de Plotly et OpenStreetMap.</p></li>
+<li><p>Exploration visuelle par survol (intitulé, ville, type de contrat).</p></li>
+</ul>
+<p>Cette visualisation facilite l’analyse :
+<em>« Où se situent géographiquement les opportunités identifiées ? »</em></p>
+<p>—</p>
+</section>
+</section>
+<section id="onglet-metiers-proches">
+<h2>Onglet « Métiers proches »<a class="headerlink" href="#onglet-metiers-proches" title="Lien vers cette rubrique"></a></h2>
+<section id="id8">
+<h3>Objectif<a class="headerlink" href="#id8" title="Lien vers cette rubrique"></a></h3>
+<p>Identifier des intitulés de postes proches sémantiquement
+afin d’élargir le champ de recherche.</p>
+<a class="reference internal image-reference" href="_images/streamlit_7.png"><img alt="Répartition géographique des offres d'emploi" class="align-center" src="_images/streamlit_7.png" style="width: 90%;" />
+</a>
+</section>
+<section id="methode">
+<h3>Méthode<a class="headerlink" href="#methode" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p>Nettoyage et normalisation des intitulés de postes.</p></li>
+<li><p>Calcul d’embeddings multilingues à l’aide d’un modèle
+<code class="docutils literal notranslate"><span class="pre">SentenceTransformer</span></code>.</p></li>
+<li><p>Mesure de similarité cosinus entre un intitulé de référence
+et les intitulés présents dans la base.</p></li>
+<li><p>Restitution des intitulés proches au-dessus d’un seuil de similarité (70%).</p></li>
+</ul>
+</section>
+<section id="resultat">
+<h3>Résultat<a class="headerlink" href="#resultat" title="Lien vers cette rubrique"></a></h3>
+<p>Pour chaque métier proche :
+- score de similarité sémantique,
+- nombre d’offres associées.</p>
+<p>Cet onglet répond à la question :
+<em>« Quels intitulés alternatifs ou voisins peuvent être utilisés
+comme mots-clés pour élargir la recherche d’emploi ? »</em></p>
+<p>—</p>
+</section>
+</section>
+<section id="role-dans-l-architecture-globale">
+<h2>Rôle dans l’architecture globale<a class="headerlink" href="#role-dans-l-architecture-globale" title="Lien vers cette rubrique"></a></h2>
+<p>L’application Streamlit joue un double rôle :</p>
+<ul class="simple">
+<li><p><strong>outil d’exploration analytique</strong>, facilitant l’interprétation des données,</p></li>
+<li><p><strong>outil de validation technique</strong>, confirmant :
+- la cohérence des données stockées,
+- l’accessibilité de la base depuis un service externe,
+- la stabilité du pipeline après déploiement.</p></li>
+</ul>
+<p>Elle constitue la dernière étape visible de la chaîne
+<strong>collecte → prétraitement → base → API → exploration</strong>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="render.html" class="btn btn-neutral float-left" title="Déploiement de l’API sur Render (Docker)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="glossary.html" class="btn btn-neutral float-right" title="Glossaire" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2026, Linh Dinh.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

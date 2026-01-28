@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Market Analysis — Documentation &mdash; Documentation Job Market Analysis </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d1a510d7"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Vue d’ensemble du projet" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Job Market Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Job Market Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Job Market Analysis — Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="job-market-analysis-documentation">
+<h1>Job Market Analysis — Documentation<a class="headerlink" href="#job-market-analysis-documentation" title="Lien vers cette rubrique"></a></h1>
+<p>Cette documentation décrit le projet, ses questions d’analyse, la collecte et préparation des données, la modélisation PostgreSQL, ainsi que le déploiement (Supabase, Render) et la consommation via Streamlit.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#perimetre-des-donnees">Périmètre des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#pipeline-du-projet">Pipeline du projet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#livrables">Livrables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="research_questions.html#competences-prioritaires-pour-mon-metier-cible">1) Compétences prioritaires pour mon métier cible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research_questions.html#regions-zones-avec-le-plus-d-offres">2) Régions / zones avec le plus d’offres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research_questions.html#salaires-min-max-pour-negociation">3) Salaires min / max pour négociation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research_questions.html#metiers-proches-similarite-semantique-des-intitules">4) Métiers proches : similarité sémantique des intitulés</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_collection.html#a-france-travail-api">A) France Travail (API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_collection.html#b-welcome-to-the-jungle-web-scraping">B) Welcome to the Jungle (web scraping)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#etapes-principales">Étapes principales</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#choix-de-perimetre">Choix de périmètre</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#vue-d-ensemble-du-schema">Vue d’ensemble du schéma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#entites-principales">Entités principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#relations-entre-les-tables">Relations entre les tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#contraintes-et-qualite-des-donnees">Contraintes et qualité des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_modeling.html#strategie-d-ingestion-dans-la-base">Stratégie d’ingestion dans la base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supabase.html#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supabase.html#etapes">Étapes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="render.html#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#architecture-de-deploiement">Architecture de déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#pre-requis">Pré-requis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#configuration-des-variables-d-environnement">Configuration des variables d’environnement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#processus-de-deploiement">Processus de déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#verifications-post-deploiement">Vérifications post-déploiement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="render.html#remarques">Remarques</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#connexion-aux-donnees">Connexion aux données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#structure-de-l-application">Structure de l’application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#onglet-marche">Onglet « Marché »</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#onglet-competences">Onglet « Compétences »</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#onglet-salaire">Onglet « Salaire »</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#onglet-geographie">Onglet « Géographie »</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#onglet-metiers-proches">Onglet « Métiers proches »</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamlit_app.html#role-dans-l-architecture-globale">Rôle dans l’architecture globale</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="overview.html" class="btn btn-neutral float-right" title="Vue d’ensemble du projet" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2026, Linh Dinh.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
