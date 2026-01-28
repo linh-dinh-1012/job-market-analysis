@@ -5,13 +5,13 @@ Objectif
 --------
 
 Transformer des données hétérogènes issues de plusieurs sources en tables cohérentes,
-comparables et exploitables pour l’analyse, tout en améliorant la qualité des données
+comparables et exploitables pour l'analyse, tout en améliorant la qualité des données
 et la reproductibilité du pipeline.
 
 Les étapes de prétraitement sont conçues pour :
-- réduire l’hétérogénéité des formats,
+- réduire l'hétérogénéité des formats,
 - expliciter les hypothèses de transformation,
-- préparer les données à la modélisation relationnelle et à l’analyse statistique.
+- préparer les données à la modélisation relationnelle et à l'analyse statistique.
 
 Étapes principales
 ------------------
@@ -32,7 +32,7 @@ Méthodes
 - Normalisation spécifique des intitulés de poste :
   suppression des contenus entre parenthèses et de la ponctuation.
 
-Ces traitements permettent d’améliorer :
+Ces traitements permettent d'améliorer :
 - le comptage des intitulés similaires,
 - les calculs de similarité sémantique,
 - la déduplication partielle.
@@ -47,7 +47,7 @@ souvent hétérogènes.
 
 Méthodes
 """"""""
-- Normalisation Unicode pour corriger les problèmes d’encodage.
+- Normalisation Unicode pour corriger les problèmes d'encodage.
 - Extraction du code département et du nom de ville à partir de libellés
   de type ``"75 - Paris"``.
 - Nettoyage des noms de villes (suppression des arrondissements et variantes).
@@ -56,7 +56,7 @@ Méthodes
 
 Comportement dégradé
 """"""""""""""""""""
-- En l’absence de référentiel ou de correspondance valide, la ville issue de la
+- En l'absence de référentiel ou de correspondance valide, la ville issue de la
   source est conservée sans coordonnées GPS.
 - Cette approche permet de ne pas bloquer le pipeline en cas de données incomplètes.
 
@@ -85,7 +85,7 @@ peu structurés.
 Méthodes
 """"""""
 - Extraction des valeurs numériques présentes dans les libellés de salaire.
-- Détection heuristique de l’unité (horaire, mensuelle, annuelle).
+- Détection heuristique de l'unité (horaire, mensuelle, annuelle).
 - Conversion des montants vers une unité annuelle lorsque possible.
 - Traitement spécifique des valeurs annuelles exprimées en milliers.
 - Exclusion des salaires non informatifs (zéro ou absence de chiffres).
@@ -93,7 +93,7 @@ Méthodes
 Résultat
 """"""""
 - Deux bornes numériques : salaire minimum et salaire maximum (annuels).
-- Valeurs ``NULL`` si l’information n’est pas exploitable.
+- Valeurs ``NULL`` si l'information n'est pas exploitable.
 
 5) Compétences et langues
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -142,7 +142,7 @@ Indicateurs suivis
 """"""""""""""""""
 - Taux de valeurs manquantes par champ (salaire, localisation, compétences).
 - Détection de doublons via :
-  URL d’origine,
+  URL d'origine,
   identifiant source lorsque disponible.
 
 Principes

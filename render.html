@@ -50,11 +50,11 @@
 <li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="django_api.html">Mise en place de l’API Django</a></li>
 <li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Déploiement de l’API sur Render (Docker)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#architecture-de-deploiement">Architecture de déploiement</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pre-requis">Pré-requis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#configuration-des-variables-d-environnement">Configuration des variables d’environnement</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#processus-de-deploiement">Processus de déploiement</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#phase-de-build">1) Phase de build</a></li>
@@ -101,8 +101,8 @@
 de service web conteneurisé, et la connecter à une base PostgreSQL
 hébergée sur <strong>Supabase</strong>.</p>
 <p>Le déploiement repose sur <strong>Docker</strong>, garantissant la portabilité
-et la reproductibilité de l’environnement d’exécution.</p>
-<p>—</p>
+et la reproductibilité de l’environnement d’exécution.
+—</p>
 </section>
 <section id="architecture-de-deploiement">
 <h2>Architecture de déploiement<a class="headerlink" href="#architecture-de-deploiement" title="Lien vers cette rubrique"></a></h2>
@@ -111,23 +111,9 @@ et la reproductibilité de l’environnement d’exécution.</p>
 <li><p>Conteneurisation : Docker (image construite à partir du <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>)</p></li>
 <li><p>Plateforme de déploiement : Render (Web Service)</p></li>
 <li><p>Base de données : PostgreSQL (Supabase)</p></li>
-<li><p>Accès externe : API REST exposée via HTTPS</p></li>
 </ul>
 <a class="reference internal image-reference" href="_images/render.png"><img alt="Architecture de déploiement Render" class="align-center" src="_images/render.png" style="width: 90%;" />
 </a>
-<p><em>(Schéma d’architecture à insérer ultérieurement)</em></p>
-<p>—</p>
-</section>
-<section id="pre-requis">
-<h2>Pré-requis<a class="headerlink" href="#pre-requis" title="Lien vers cette rubrique"></a></h2>
-<ul class="simple">
-<li><p>Un <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> définissant l’environnement d’exécution de l’API.</p></li>
-<li><p>Un script de démarrage (ex. <code class="docutils literal notranslate"><span class="pre">start.sh</span></code>) gérant :
-- l’application des migrations,
-- le lancement du serveur Django.</p></li>
-<li><p>Un fichier <code class="docutils literal notranslate"><span class="pre">render.yaml</span></code> ou une configuration équivalente via l’interface Render.</p></li>
-<li><p>Des variables d’environnement pour la configuration applicative et l’accès à la base.</p></li>
-</ul>
 <p>—</p>
 </section>
 <section id="configuration-des-variables-d-environnement">
@@ -145,11 +131,10 @@ via les variables d’environnement Render :</p>
 - <code class="docutils literal notranslate"><span class="pre">DJANGO_SECRET_KEY</span></code>
 - <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>
 - <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span></code></p></li>
-<li><p>Paramètres applicatifs spécifiques (ex. limites de collecte).</p></li>
 </ul>
 <p>Cette approche évite toute configuration en dur dans le code
-et facilite le passage entre environnements.</p>
-<p>—</p>
+et facilite le passage entre environnements.
+—</p>
 </section>
 <section id="processus-de-deploiement">
 <h2>Processus de déploiement<a class="headerlink" href="#processus-de-deploiement" title="Lien vers cette rubrique"></a></h2>

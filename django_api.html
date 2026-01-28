@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; Documentation Job Market Analysis </title>
+  <title>Mise en place de l’API Django &mdash; Documentation Job Market Analysis </title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
@@ -44,12 +44,24 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Mise en place de l’API Django</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialisation-du-projet-django">Initialisation du projet Django</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-asgi-et-wsgi">Configuration ASGI et WSGI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gestion-des-parametres-et-des-secrets">Gestion des paramètres et des secrets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connexion-a-la-base-postgresql">Connexion à la base PostgreSQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#applications-et-middleware">Applications et middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#routage-de-l-api">Routage de l’API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creation-automatisee-du-superutilisateur">Création automatisée du superutilisateur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#role-de-django-dans-l-architecture-globale">Rôle de Django dans l’architecture globale</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a></li>
@@ -70,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+      <li class="breadcrumb-item active">Mise en place de l’API Django</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/django_api.rst.txt" rel="nofollow"> Afficher la source de la page</a>
       </li>
@@ -80,7 +92,130 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  
+  <section id="mise-en-place-de-l-api-django">
+<h1>Mise en place de l’API Django<a class="headerlink" href="#mise-en-place-de-l-api-django" title="Lien vers cette rubrique"></a></h1>
+<section id="objectif">
+<h2>Objectif<a class="headerlink" href="#objectif" title="Lien vers cette rubrique"></a></h2>
+<p>Mettre en place une <strong>API REST robuste et reproductible</strong> permettant :</p>
+<ul class="simple">
+<li><p>l’accès programmatique aux données stockées en base PostgreSQL,</p></li>
+<li><p>l’exposition des données à des applications externes (Streamlit, analyses),</p></li>
+</ul>
+<p>Le framework <strong>Django</strong> est utilisé comme socle applicatif,
+complété par <strong>Django REST Framework</strong> pour la construction de l’API.</p>
+<p>—</p>
+</section>
+<section id="initialisation-du-projet-django">
+<h2>Initialisation du projet Django<a class="headerlink" href="#initialisation-du-projet-django" title="Lien vers cette rubrique"></a></h2>
+<p>Le projet a été initialisé à l’aide de la commande standard :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">django-admin</span> <span class="pre">startproject</span> <span class="pre">backend</span></code></p></li>
+</ul>
+<p>La structure repose sur :
+- un projet principal <code class="docutils literal notranslate"><span class="pre">backend</span></code> (configuration globale),
+- une application dédiée <code class="docutils literal notranslate"><span class="pre">rest_api</span></code> pour l’exposition des endpoints.</p>
+<p>Le fichier <code class="docutils literal notranslate"><span class="pre">manage.py</span></code> sert de point d’entrée unique pour :
+- les migrations,
+- la gestion des utilisateurs,
+- le lancement du serveur,
+- les commandes d’administration.</p>
+<p>—</p>
+</section>
+<section id="configuration-asgi-et-wsgi">
+<h2>Configuration ASGI et WSGI<a class="headerlink" href="#configuration-asgi-et-wsgi" title="Lien vers cette rubrique"></a></h2>
+<p>Deux interfaces d’exécution sont configurées :</p>
+<ul class="simple">
+<li><p><strong>WSGI</strong> (<code class="docutils literal notranslate"><span class="pre">backend.wsgi</span></code>) pour un déploiement classique synchrone,</p></li>
+<li><p><strong>ASGI</strong> (<code class="docutils literal notranslate"><span class="pre">backend.asgi</span></code>) pour une compatibilité future avec
+des serveurs asynchrones.</p></li>
+</ul>
+<p>Ces deux fichiers exposent un objet <code class="docutils literal notranslate"><span class="pre">application</span></code> initialisé
+à partir du module de configuration <code class="docutils literal notranslate"><span class="pre">backend.settings</span></code>.</p>
+<p>Ce double support facilite l’adaptation à différents environnements
+de déploiement sans modifier le code applicatif.</p>
+<p>—</p>
+</section>
+<section id="gestion-des-parametres-et-des-secrets">
+<h2>Gestion des paramètres et des secrets<a class="headerlink" href="#gestion-des-parametres-et-des-secrets" title="Lien vers cette rubrique"></a></h2>
+<p>Les paramètres sensibles ne sont jamais codés en dur dans la logique applicative.</p>
+<p>Les variables suivantes sont injectées via l’environnement :</p>
+<ul class="simple">
+<li><p>paramètres de connexion PostgreSQL :
+<code class="docutils literal notranslate"><span class="pre">DB_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">DB_NAME</span></code>, <code class="docutils literal notranslate"><span class="pre">DB_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">DB_PASSWORD</span></code>, <code class="docutils literal notranslate"><span class="pre">DB_PORT</span></code> ;</p></li>
+<li><p>paramètres Django :
+<code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>, <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span></code>, <code class="docutils literal notranslate"><span class="pre">CSRF_TRUSTED_ORIGINS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CORS_ALLOWED_ORIGINS</span></code>.</p></li>
+</ul>
+<p>Cette approche garantit :
+- la séparation entre code et configuration,
+- la portabilité entre environnements (local, Render),
+- la sécurité des secrets.</p>
+<p>—</p>
+</section>
+<section id="connexion-a-la-base-postgresql">
+<h2>Connexion à la base PostgreSQL<a class="headerlink" href="#connexion-a-la-base-postgresql" title="Lien vers cette rubrique"></a></h2>
+<p>Django est configuré pour utiliser PostgreSQL comme moteur de base de données.</p>
+<p>La configuration repose exclusivement sur les variables d’environnement,
+permettant une connexion directe à une base distante hébergée sur Supabase.</p>
+<p>Ce choix assure la cohérence avec :
+- le pipeline d’ingestion Python,
+- l’API REST,
+- les outils d’analyse et de visualisation.</p>
+<p>—</p>
+</section>
+<section id="applications-et-middleware">
+<h2>Applications et middleware<a class="headerlink" href="#applications-et-middleware" title="Lien vers cette rubrique"></a></h2>
+<p>Les applications installées incluent :</p>
+<ul class="simple">
+<li><p>les modules Django standards (authentification, sessions, admin),</p></li>
+<li><p><strong>Django REST Framework</strong> pour l’API,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rest_api</span></code> pour la logique métier,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corsheaders</span></code> pour la gestion des accès cross-origin.</p></li>
+</ul>
+<p>Les middlewares sont configurés pour :
+- autoriser les requêtes cross-origin depuis des applications externes,
+- servir les fichiers statiques via <strong>Whitenoise</strong>,
+- garantir la sécurité et la gestion des sessions.</p>
+<p>—</p>
+</section>
+<section id="routage-de-l-api">
+<h2>Routage de l’API<a class="headerlink" href="#routage-de-l-api" title="Lien vers cette rubrique"></a></h2>
+<p>Le routage global est défini dans <code class="docutils literal notranslate"><span class="pre">backend.urls</span></code> :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/admin/</span></code> : interface d’administration Django,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/api/</span></code> : point d’entrée de l’API REST.</p></li>
+</ul>
+<p>Les routes détaillées de l’API sont définies dans l’application <code class="docutils literal notranslate"><span class="pre">rest_api</span></code>,
+permettant une séparation claire entre configuration globale
+et logique métier.</p>
+<p>—</p>
+</section>
+<section id="creation-automatisee-du-superutilisateur">
+<h2>Création automatisée du superutilisateur<a class="headerlink" href="#creation-automatisee-du-superutilisateur" title="Lien vers cette rubrique"></a></h2>
+<p>Un script dédié permet la création automatique d’un superutilisateur
+lors du déploiement.</p>
+<p>Le comportement est contrôlé par des variables d’environnement :
+- activation conditionnelle (<code class="docutils literal notranslate"><span class="pre">CREATE_SUPERUSER=true</span></code>),
+- identifiants fournis via variables sécurisées.</p>
+<p>Cette approche facilite :
+- l’initialisation des environnements distants,
+- l’accès à l’interface d’administration sans intervention manuelle,
+- la reproductibilité des déploiements.</p>
+<p>—</p>
+</section>
+<section id="role-de-django-dans-l-architecture-globale">
+<h2>Rôle de Django dans l’architecture globale<a class="headerlink" href="#role-de-django-dans-l-architecture-globale" title="Lien vers cette rubrique"></a></h2>
+<p>Dans l’architecture du projet, Django joue le rôle de :</p>
+<ul class="simple">
+<li><p><strong>couche d’accès aux données</strong> via l’ORM,</p></li>
+<li><p><strong>API REST</strong> exposant les données normalisées,</p></li>
+<li><p><strong>point de jonction</strong> entre la base PostgreSQL et les applications clientes.</p></li>
+</ul>
+<p>Cette couche applicative constitue un composant central entre
+l’ingestion des données et leur exploitation analytique.</p>
+</section>
+</section>
+
 
            </div>
           </div>

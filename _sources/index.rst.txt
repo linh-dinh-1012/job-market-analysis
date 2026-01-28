@@ -1,7 +1,7 @@
 Job Market Analysis — Documentation
 ==================================
 
-Cette documentation décrit le projet, ses questions d’analyse, la collecte et préparation des données, la modélisation PostgreSQL, ainsi que le déploiement (Supabase, Render) et la consommation via Streamlit.
+Cette documentation décrit le projet, ses questions d'analyse, la collecte et préparation des données, la modélisation PostgreSQL, ainsi que le déploiement (Supabase, Render) et la consommation via Streamlit.
 
 .. toctree::
    :maxdepth: 2

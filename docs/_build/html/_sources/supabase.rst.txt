@@ -4,9 +4,9 @@ Hébergement PostgreSQL sur Supabase
 Objectif
 --------
 Utiliser Supabase comme hébergement PostgreSQL managé pour faciliter :
-- l'accès distant,
-- la stabilité de la base en production,
-- l'intégration avec l'API déployée.
+- l'accès distant
+- la stabilité de la base en production
+- l'intégration avec l'API déployée
 
 .. image:: _static/supabase_1.png
    :alt: Schéma relationnel PostgreSQL - vue d'ensemble

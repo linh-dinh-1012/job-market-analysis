@@ -10,7 +10,6 @@ hébergée sur **Supabase**.
 
 Le déploiement repose sur **Docker**, garantissant la portabilité
 et la reproductibilité de l'environnement d'exécution.
-
 ---
 
 Architecture de déploiement
@@ -20,26 +19,11 @@ Architecture de déploiement
 - Conteneurisation : Docker (image construite à partir du ``Dockerfile``)
 - Plateforme de déploiement : Render (Web Service)
 - Base de données : PostgreSQL (Supabase)
-- Accès externe : API REST exposée via HTTPS
 
 .. image:: _static/render.png
    :alt: Architecture de déploiement Render
    :align: center
    :width: 90%
-
-*(Schéma d'architecture à insérer ultérieurement)*
-
----
-
-Pré-requis
-----------
-
-- Un ``Dockerfile`` définissant l'environnement d'exécution de l'API.
-- Un script de démarrage (ex. ``start.sh``) gérant :
-  - l'application des migrations,
-  - le lancement du serveur Django.
-- Un fichier ``render.yaml`` ou une configuration équivalente via l'interface Render.
-- Des variables d'environnement pour la configuration applicative et l'accès à la base.
 
 ---
 
@@ -59,11 +43,9 @@ via les variables d'environnement Render :
   - ``DJANGO_SECRET_KEY``
   - ``DEBUG``
   - ``ALLOWED_HOSTS``
-- Paramètres applicatifs spécifiques (ex. limites de collecte).
 
 Cette approche évite toute configuration en dur dans le code
 et facilite le passage entre environnements.
-
 ---
 
 Processus de déploiement
@@ -102,7 +84,6 @@ Après le déploiement, plusieurs vérifications sont effectuées :
   - erreurs de migration,
   - problèmes de connexion à la base,
   - erreurs d'import ou de configuration.
-
 ---
 
 Remarques
