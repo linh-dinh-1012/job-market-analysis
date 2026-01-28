@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prétraitement et normalisation &mdash; Documentation Job Market Analysis </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d1a510d7"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Modélisation et base PostgreSQL (France Travail)" href="database_modeling.html" />
+    <link rel="prev" title="Collecte des données" href="data_collection.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Market Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Prétraitement et normalisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etapes-principales">Étapes principales</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#normalisation-des-champs-textuels">1) Normalisation des champs textuels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#methodes">Méthodes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#localisation-et-referentiel-geographique">2) Localisation et référentiel géographique</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Méthodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comportement-degrade">Comportement dégradé</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#normalisation-des-types-de-contrat">3) Normalisation des types de contrat</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Méthodes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#parsing-et-harmonisation-des-salaires-france-travail">4) Parsing et harmonisation des salaires (France Travail)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Méthodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resultat">Résultat</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#competences-et-langues">5) Compétences et langues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#france-travail">France Travail</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#welcome-to-the-jungle">Welcome to the Jungle</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#harmonisation-multi-sources">6) Harmonisation multi-sources</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id9">Objectif</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Méthodes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#qualite-et-securite-des-donnees">7) Qualité et sécurité des données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#indicateurs-suivis">Indicateurs suivis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#principes">Principes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="database_modeling.html">Modélisation et base PostgreSQL (France Travail)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Market Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Prétraitement et normalisation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pretraitement-et-normalisation">
+<h1>Prétraitement et normalisation<a class="headerlink" href="#pretraitement-et-normalisation" title="Lien vers cette rubrique"></a></h1>
+<section id="objectif">
+<h2>Objectif<a class="headerlink" href="#objectif" title="Lien vers cette rubrique"></a></h2>
+<p>Transformer des données hétérogènes issues de plusieurs sources en tables cohérentes,
+comparables et exploitables pour l’analyse, tout en améliorant la qualité des données
+et la reproductibilité du pipeline.</p>
+<p>Les étapes de prétraitement sont conçues pour :
+- réduire l’hétérogénéité des formats,
+- expliciter les hypothèses de transformation,
+- préparer les données à la modélisation relationnelle et à l’analyse statistique.</p>
+</section>
+<section id="etapes-principales">
+<h2>Étapes principales<a class="headerlink" href="#etapes-principales" title="Lien vers cette rubrique"></a></h2>
+<section id="normalisation-des-champs-textuels">
+<h3>1) Normalisation des champs textuels<a class="headerlink" href="#normalisation-des-champs-textuels" title="Lien vers cette rubrique"></a></h3>
+<section id="id1">
+<h4>Objectif<a class="headerlink" href="#id1" title="Lien vers cette rubrique"></a></h4>
+<p>Garantir une comparaison fiable des textes (intitulés, descriptions, libellés)
+en limitant les variations purement typographiques.</p>
+</section>
+<section id="methodes">
+<h4>Méthodes<a class="headerlink" href="#methodes" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Passage systématique en minuscules.</p></li>
+<li><p>Suppression des espaces multiples et des caractères invisibles (ex. <code class="docutils literal notranslate"><span class="pre">\u00a0</span></code>).</p></li>
+<li><p>Nettoyage des caractères non alphabétiques non pertinents.</p></li>
+<li><p>Normalisation spécifique des intitulés de poste :
+suppression des contenus entre parenthèses et de la ponctuation.</p></li>
+</ul>
+<p>Ces traitements permettent d’améliorer :
+- le comptage des intitulés similaires,
+- les calculs de similarité sémantique,
+- la déduplication partielle.</p>
+</section>
+</section>
+<section id="localisation-et-referentiel-geographique">
+<h3>2) Localisation et référentiel géographique<a class="headerlink" href="#localisation-et-referentiel-geographique" title="Lien vers cette rubrique"></a></h3>
+<section id="id2">
+<h4>Objectif<a class="headerlink" href="#id2" title="Lien vers cette rubrique"></a></h4>
+<p>Extraire des informations géographiques exploitables à partir de libellés textuels
+souvent hétérogènes.</p>
+</section>
+<section id="id3">
+<h4>Méthodes<a class="headerlink" href="#id3" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Normalisation Unicode pour corriger les problèmes d’encodage.</p></li>
+<li><p>Extraction du code département et du nom de ville à partir de libellés
+de type <code class="docutils literal notranslate"><span class="pre">&quot;75</span> <span class="pre">-</span> <span class="pre">Paris&quot;</span></code>.</p></li>
+<li><p>Nettoyage des noms de villes (suppression des arrondissements et variantes).</p></li>
+<li><p>Appariement avec un référentiel départemental externe (CSV) pour enrichir
+les offres avec des coordonnées géographiques (latitude, longitude).</p></li>
+</ul>
+</section>
+<section id="comportement-degrade">
+<h4>Comportement dégradé<a class="headerlink" href="#comportement-degrade" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>En l’absence de référentiel ou de correspondance valide, la ville issue de la
+source est conservée sans coordonnées GPS.</p></li>
+<li><p>Cette approche permet de ne pas bloquer le pipeline en cas de données incomplètes.</p></li>
+</ul>
+</section>
+</section>
+<section id="normalisation-des-types-de-contrat">
+<h3>3) Normalisation des types de contrat<a class="headerlink" href="#normalisation-des-types-de-contrat" title="Lien vers cette rubrique"></a></h3>
+<section id="id4">
+<h4>Objectif<a class="headerlink" href="#id4" title="Lien vers cette rubrique"></a></h4>
+<p>Réduire la diversité des libellés contractuels à un ensemble de catégories
+comparables.</p>
+</section>
+<section id="id5">
+<h4>Méthodes<a class="headerlink" href="#id5" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Regroupement heuristique des libellés vers des catégories normalisées
+(ex. <code class="docutils literal notranslate"><span class="pre">FULL_TIME</span></code>, <code class="docutils literal notranslate"><span class="pre">TEMPORAIN</span></code>, <code class="docutils literal notranslate"><span class="pre">INTERN</span></code>).</p></li>
+<li><p>Conservation des libellés bruts en parallèle pour audit ou analyses ultérieures.</p></li>
+</ul>
+</section>
+</section>
+<section id="parsing-et-harmonisation-des-salaires-france-travail">
+<h3>4) Parsing et harmonisation des salaires (France Travail)<a class="headerlink" href="#parsing-et-harmonisation-des-salaires-france-travail" title="Lien vers cette rubrique"></a></h3>
+<section id="id6">
+<h4>Objectif<a class="headerlink" href="#id6" title="Lien vers cette rubrique"></a></h4>
+<p>Extraire des bornes salariales numériques exploitables à partir de champs textuels
+peu structurés.</p>
+</section>
+<section id="id7">
+<h4>Méthodes<a class="headerlink" href="#id7" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Extraction des valeurs numériques présentes dans les libellés de salaire.</p></li>
+<li><p>Détection heuristique de l’unité (horaire, mensuelle, annuelle).</p></li>
+<li><p>Conversion des montants vers une unité annuelle lorsque possible.</p></li>
+<li><p>Traitement spécifique des valeurs annuelles exprimées en milliers.</p></li>
+<li><p>Exclusion des salaires non informatifs (zéro ou absence de chiffres).</p></li>
+</ul>
+</section>
+<section id="resultat">
+<h4>Résultat<a class="headerlink" href="#resultat" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Deux bornes numériques : salaire minimum et salaire maximum (annuels).</p></li>
+<li><p>Valeurs <code class="docutils literal notranslate"><span class="pre">NULL</span></code> si l’information n’est pas exploitable.</p></li>
+</ul>
+</section>
+</section>
+<section id="competences-et-langues">
+<h3>5) Compétences et langues<a class="headerlink" href="#competences-et-langues" title="Lien vers cette rubrique"></a></h3>
+<section id="id8">
+<h4>Objectif<a class="headerlink" href="#id8" title="Lien vers cette rubrique"></a></h4>
+<p>Structurer les compétences et langues associées aux offres pour permettre
+des analyses quantitatives.</p>
+</section>
+<section id="france-travail">
+<h4>France Travail<a class="headerlink" href="#france-travail" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Distinction explicite entre compétences <strong>requises</strong> et <strong>souhaitées</strong>
+à partir du champ <code class="docutils literal notranslate"><span class="pre">exigence</span></code> (<code class="docutils literal notranslate"><span class="pre">E</span></code> / <code class="docutils literal notranslate"><span class="pre">S</span></code>).</p></li>
+<li><p>Séparation des compétences techniques (hard skills) et des qualités
+professionnelles (soft skills).</p></li>
+<li><p>Même logique appliquée aux langues.</p></li>
+</ul>
+</section>
+<section id="welcome-to-the-jungle">
+<h4>Welcome to the Jungle<a class="headerlink" href="#welcome-to-the-jungle" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Absence de hiérarchisation requise/souhaitée dans la source.</p></li>
+<li><p>Regroupement des compétences techniques et savoir-faire dans une liste unique.</p></li>
+<li><p>Conservation des soft skills et langues lorsque disponibles.</p></li>
+</ul>
+</section>
+</section>
+<section id="harmonisation-multi-sources">
+<h3>6) Harmonisation multi-sources<a class="headerlink" href="#harmonisation-multi-sources" title="Lien vers cette rubrique"></a></h3>
+<section id="id9">
+<h4>Objectif<a class="headerlink" href="#id9" title="Lien vers cette rubrique"></a></h4>
+<p>Produire un schéma commun minimal permettant :
+- des analyses transversales,
+- des visualisations comparables,
+- sans fusionner artificiellement des sources hétérogènes dans la base principale.</p>
+</section>
+<section id="id10">
+<h4>Méthodes<a class="headerlink" href="#id10" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Transformation des jeux de données France Travail et Welcome to the Jungle
+vers une structure commune.</p></li>
+<li><p>Concaténation contrôlée des sources.</p></li>
+<li><p>Remplissage défensif des champs textuels manquants pour éviter les erreurs
+lors des traitements analytiques.</p></li>
+</ul>
+</section>
+</section>
+<section id="qualite-et-securite-des-donnees">
+<h3>7) Qualité et sécurité des données<a class="headerlink" href="#qualite-et-securite-des-donnees" title="Lien vers cette rubrique"></a></h3>
+<section id="indicateurs-suivis">
+<h4>Indicateurs suivis<a class="headerlink" href="#indicateurs-suivis" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Taux de valeurs manquantes par champ (salaire, localisation, compétences).</p></li>
+<li><p>Détection de doublons via :
+URL d’origine,
+identifiant source lorsque disponible.</p></li>
+</ul>
+</section>
+<section id="principes">
+<h4>Principes<a class="headerlink" href="#principes" title="Lien vers cette rubrique"></a></h4>
+<ul class="simple">
+<li><p>Préserver les données brutes autant que possible.</p></li>
+<li><p>Rendre explicites les transformations appliquées.</p></li>
+<li><p>Garantir la reproductibilité des étapes de prétraitement.</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="data_collection.html" class="btn btn-neutral float-left" title="Collecte des données" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="database_modeling.html" class="btn btn-neutral float-right" title="Modélisation et base PostgreSQL (France Travail)" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2026, Linh Dinh.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

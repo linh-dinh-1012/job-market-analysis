@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modélisation et base PostgreSQL (France Travail) &mdash; Documentation Job Market Analysis </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d1a510d7"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="django_api.html" />
+    <link rel="prev" title="Prétraitement et normalisation" href="preprocessing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Job Market Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Vue d’ensemble du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research_questions.html">Questions d’analyse (cadrage « recherche »)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_collection.html">Collecte des données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Prétraitement et normalisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modélisation et base PostgreSQL (France Travail)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#choix-de-perimetre">Choix de périmètre</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vue-d-ensemble-du-schema">Vue d’ensemble du schéma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#entites-principales">Entités principales</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#source"><code class="docutils literal notranslate"><span class="pre">source</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#company"><code class="docutils literal notranslate"><span class="pre">company</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#job-offer"><code class="docutils literal notranslate"><span class="pre">job_offer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skill"><code class="docutils literal notranslate"><span class="pre">skill</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#job-offer-skill"><code class="docutils literal notranslate"><span class="pre">job_offer_skill</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#relations-entre-les-tables">Relations entre les tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contraintes-et-qualite-des-donnees">Contraintes et qualité des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strategie-d-ingestion-dans-la-base">Stratégie d’ingestion dans la base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ordonnancement-de-l-ingestion">Ordonnancement de l’ingestion</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#resolution-des-entites-de-reference">1) Résolution des entités de référence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#insertion-ou-mise-a-jour-de-l-offre">2) Insertion ou mise à jour de l’offre</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gestion-des-competences-et-langues">3) Gestion des compétences et langues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gestion-transactionnelle">4) Gestion transactionnelle</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#garanties-apportees-par-cette-strategie">Garanties apportées par cette stratégie</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supabase.html">Hébergement PostgreSQL sur Supabase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="render.html">Déploiement de l’API sur Render (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit_app.html">Application Streamlit (exploration et validation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossaire</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Job Market Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modélisation et base PostgreSQL (France Travail)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/database_modeling.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modelisation-et-base-postgresql-france-travail">
+<h1>Modélisation et base PostgreSQL (France Travail)<a class="headerlink" href="#modelisation-et-base-postgresql-france-travail" title="Lien vers cette rubrique"></a></h1>
+<section id="choix-de-perimetre">
+<h2>Choix de périmètre<a class="headerlink" href="#choix-de-perimetre" title="Lien vers cette rubrique"></a></h2>
+<p>La base relationnelle est centrée exclusivement sur les données issues de <strong>France Travail</strong>.</p>
+<p>Ce choix permet :
+- de garantir un <strong>schéma stable et reproductible</strong>,
+- d’éviter des divergences structurelles entre sources hétérogènes,
+- de faciliter l’industrialisation de la chaîne <strong>ingestion → API REST → analyses</strong>.</p>
+<p>Les données provenant d’autres sources (ex. Welcome to the Jungle) sont exploitées
+en dehors de cette base relationnelle principale.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ce périmètre volontairement restreint facilite la maintenance, la documentation
+et l’évolution du schéma dans un contexte de recherche.</p>
+</div>
+<p>—</p>
+</section>
+<section id="vue-d-ensemble-du-schema">
+<h2>Vue d’ensemble du schéma<a class="headerlink" href="#vue-d-ensemble-du-schema" title="Lien vers cette rubrique"></a></h2>
+<p>La base est organisée autour d’une table centrale représentant les offres d’emploi,
+enrichie par des tables de référence (sources, entreprises, compétences) et
+des tables de liaison.</p>
+<a class="reference internal image-reference" href="_images/schema_postgresql_overview.png"><img alt="Schéma relationnel PostgreSQL - vue d'ensemble" class="align-center" src="_images/schema_postgresql_overview.png" style="width: 90%;" />
+</a>
+<p>—</p>
+</section>
+<section id="entites-principales">
+<h2>Entités principales<a class="headerlink" href="#entites-principales" title="Lien vers cette rubrique"></a></h2>
+<section id="source">
+<h3><code class="docutils literal notranslate"><span class="pre">source</span></code><a class="headerlink" href="#source" title="Lien vers cette rubrique"></a></h3>
+<p>Table de référence décrivant la provenance des offres.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">code</span></code> : identifiant court de la source (ex. <code class="docutils literal notranslate"><span class="pre">FT</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> : nom lisible de la source.</p></li>
+</ul>
+<p>Cette table permet d’anticiper l’ajout futur d’autres sources,
+sans modifier la structure de la table centrale.</p>
+</section>
+<section id="company">
+<h3><code class="docutils literal notranslate"><span class="pre">company</span></code><a class="headerlink" href="#company" title="Lien vers cette rubrique"></a></h3>
+<p>Table des entreprises associées aux offres.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> : nom normalisé de l’entreprise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raw_name</span></code> : nom brut tel que fourni par la source.</p></li>
+</ul>
+<p>Une contrainte d’unicité est appliquée sur le nom normalisé afin de
+limiter la duplication des entreprises.</p>
+</section>
+<section id="job-offer">
+<h3><code class="docutils literal notranslate"><span class="pre">job_offer</span></code><a class="headerlink" href="#job-offer" title="Lien vers cette rubrique"></a></h3>
+<p>Table centrale du modèle, représentant une offre d’emploi.</p>
+<p>Champs principaux :
+- référence à la source (<code class="docutils literal notranslate"><span class="pre">source_id</span></code>),
+- référence optionnelle à l’entreprise (<code class="docutils literal notranslate"><span class="pre">company_id</span></code>),
+- identifiants et URL d’origine,
+- informations descriptives (titre, description, localisation, contrat),
+- informations contextuelles (salaire, secteur, expérience, formation),
+- métadonnées temporelles (date de publication, timestamps).</p>
+<p>Cette table constitue le point d’entrée principal pour l’API et les analyses.</p>
+</section>
+<section id="skill">
+<h3><code class="docutils literal notranslate"><span class="pre">skill</span></code><a class="headerlink" href="#skill" title="Lien vers cette rubrique"></a></h3>
+<p>Référentiel des compétences, partagé par l’ensemble des offres.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> : libellé de la compétence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code> : type de compétence (<code class="docutils literal notranslate"><span class="pre">hard</span></code>, <code class="docutils literal notranslate"><span class="pre">soft</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>).</p></li>
+</ul>
+<p>La contrainte d’unicité <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">category)</span></code> garantit une normalisation
+des compétences.</p>
+</section>
+<section id="job-offer-skill">
+<h3><code class="docutils literal notranslate"><span class="pre">job_offer_skill</span></code><a class="headerlink" href="#job-offer-skill" title="Lien vers cette rubrique"></a></h3>
+<p>Table de liaison entre les offres et les compétences.</p>
+<p>Elle permet :
+- de représenter une relation <strong>many-to-many</strong>,
+- de distinguer le niveau d’exigence (<code class="docutils literal notranslate"><span class="pre">required</span></code> / <code class="docutils literal notranslate"><span class="pre">optional</span></code>),
+- de conserver la trace du champ source ayant fourni la compétence.</p>
+<p>—</p>
+</section>
+</section>
+<section id="relations-entre-les-tables">
+<h2>Relations entre les tables<a class="headerlink" href="#relations-entre-les-tables" title="Lien vers cette rubrique"></a></h2>
+<ul class="simple">
+<li><p>Une offre appartient à une et une seule source
+(<code class="docutils literal notranslate"><span class="pre">job_offer.source_id</span> <span class="pre">→</span> <span class="pre">source.id</span></code>).</p></li>
+<li><p>Une offre peut être associée à une entreprise
+(relation optionnelle vers <code class="docutils literal notranslate"><span class="pre">company</span></code>).</p></li>
+<li><p>Une offre peut référencer plusieurs compétences, et une compétence
+peut apparaître dans plusieurs offres, via <code class="docutils literal notranslate"><span class="pre">job_offer_skill</span></code>.</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="contraintes-et-qualite-des-donnees">
+<h2>Contraintes et qualité des données<a class="headerlink" href="#contraintes-et-qualite-des-donnees" title="Lien vers cette rubrique"></a></h2>
+<p>Plusieurs mécanismes garantissent la qualité et la cohérence des données :</p>
+<ul class="simple">
+<li><p><strong>Unicité des offres</strong> :
+une contrainte unique sur <code class="docutils literal notranslate"><span class="pre">(source_id,</span> <span class="pre">url)</span></code> empêche l’insertion
+de doublons lors des ingestions successives.</p></li>
+<li><p><strong>Intégrité référentielle</strong> :
+clés étrangères vers <code class="docutils literal notranslate"><span class="pre">source</span></code> et <code class="docutils literal notranslate"><span class="pre">company</span></code>.</p></li>
+<li><p><strong>Nettoyage automatique</strong> :
+suppression en cascade des relations <code class="docutils literal notranslate"><span class="pre">job_offer_skill</span></code> lorsque
+l’offre associée est supprimée.</p></li>
+<li><p><strong>Normalisation</strong> :
+les compétences sont stockées dans une table dédiée, évitant
+toute duplication textuelle dans <code class="docutils literal notranslate"><span class="pre">job_offer</span></code>.</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="strategie-d-ingestion-dans-la-base">
+<h2>Stratégie d’ingestion dans la base<a class="headerlink" href="#strategie-d-ingestion-dans-la-base" title="Lien vers cette rubrique"></a></h2>
+<p>L’ingestion des données France Travail repose sur une stratégie
+<strong>incrémentale, transactionnelle et défensive</strong>, permettant des ré-exécutions
+sans duplication ni corruption des données.</p>
+<p>L’ensemble du processus est orchestré par un pipeline Python
+qui enchaîne prétraitement, résolution des dépendances et écriture
+en base relationnelle PostgreSQL.</p>
+<section id="ordonnancement-de-l-ingestion">
+<h3>Ordonnancement de l’ingestion<a class="headerlink" href="#ordonnancement-de-l-ingestion" title="Lien vers cette rubrique"></a></h3>
+<p>Pour chaque offre prétraitée, l’ingestion suit l’ordre logique suivant :</p>
+<section id="resolution-des-entites-de-reference">
+<h4>1) Résolution des entités de référence<a class="headerlink" href="#resolution-des-entites-de-reference" title="Lien vers cette rubrique"></a></h4>
+<p>Avant l’insertion de l’offre, les entités dépendantes sont créées ou récupérées :</p>
+<ul class="simple">
+<li><p><strong>Entreprise</strong> :
+récupération ou création via une logique <code class="docutils literal notranslate"><span class="pre">get_or_create</span></code> basée sur
+le nom normalisé de l’entreprise.</p></li>
+<li><p><strong>Secteur d’activité</strong> :
+création conditionnelle lorsque l’information est disponible.</p></li>
+<li><p><strong>Type de contrat</strong> :
+création conditionnelle à partir du libellé fourni par la source.</p></li>
+<li><p><strong>Localisation</strong> :
+création ou récupération à partir du couple
+<code class="docutils literal notranslate"><span class="pre">(ville,</span> <span class="pre">code_postal)</span></code>, avec enrichissement optionnel en coordonnées GPS.</p></li>
+</ul>
+<p>Cette étape garantit que toutes les clés étrangères nécessaires
+sont disponibles avant l’écriture de l’offre.</p>
+</section>
+<section id="insertion-ou-mise-a-jour-de-l-offre">
+<h4>2) Insertion ou mise à jour de l’offre<a class="headerlink" href="#insertion-ou-mise-a-jour-de-l-offre" title="Lien vers cette rubrique"></a></h4>
+<p>L’offre d’emploi est ensuite traitée dans la table centrale <code class="docutils literal notranslate"><span class="pre">job_offer</span></code>.</p>
+<ul class="simple">
+<li><p>L’existence de l’offre est vérifiée à partir de son <strong>URL d’origine</strong>,
+utilisée comme identifiant fonctionnel.</p></li>
+<li><p>Si l’offre existe déjà :
+les champs descriptifs et analytiques sont <strong>mis à jour</strong>
+(titre, description, salaires, expérience, formation, références
+aux entités associées), ainsi que le timestamp <code class="docutils literal notranslate"><span class="pre">updated_at</span></code>.</p></li>
+<li><p>Si l’offre est nouvelle :
+une nouvelle ligne est insérée avec l’ensemble des informations disponibles.</p></li>
+</ul>
+<p>Cette logique correspond à un <strong>upsert applicatif contrôlé</strong>, implémenté
+explicitement au niveau Python plutôt que via une clause SQL automatique,
+afin de maîtriser finement les champs mis à jour.</p>
+</section>
+<section id="gestion-des-competences-et-langues">
+<h4>3) Gestion des compétences et langues<a class="headerlink" href="#gestion-des-competences-et-langues" title="Lien vers cette rubrique"></a></h4>
+<p>Les compétences et langues associées à l’offre sont ensuite traitées :</p>
+<ul class="simple">
+<li><p>Chaque compétence ou langue est créée ou récupérée dans le référentiel
+<code class="docutils literal notranslate"><span class="pre">skill</span></code> selon son nom et sa catégorie
+(<code class="docutils literal notranslate"><span class="pre">hard</span></code>, <code class="docutils literal notranslate"><span class="pre">soft</span></code> ou <code class="docutils literal notranslate"><span class="pre">language</span></code>).</p></li>
+<li><p>Les relations entre l’offre et les compétences sont insérées dans
+<code class="docutils literal notranslate"><span class="pre">job_offer_skill</span></code> avec indication du niveau d’exigence
+(<code class="docutils literal notranslate"><span class="pre">required</span></code> / <code class="docutils literal notranslate"><span class="pre">optional</span></code>).</p></li>
+</ul>
+<p>L’insertion dans la table de liaison utilise une clause
+<code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">CONFLICT</span> <span class="pre">DO</span> <span class="pre">NOTHING</span></code>, garantissant l’absence de doublons même
+lors de ré-exécutions du pipeline.</p>
+</section>
+<section id="gestion-transactionnelle">
+<h4>4) Gestion transactionnelle<a class="headerlink" href="#gestion-transactionnelle" title="Lien vers cette rubrique"></a></h4>
+<p>L’ingestion est effectuée au sein d’une transaction PostgreSQL :</p>
+<ul class="simple">
+<li><p>validation explicite (<code class="docutils literal notranslate"><span class="pre">commit</span></code>) une fois toutes les offres traitées,</p></li>
+<li><p>annulation complète (<code class="docutils literal notranslate"><span class="pre">rollback</span></code>) en cas d’erreur.</p></li>
+</ul>
+<p>Ce mécanisme garantit la cohérence de la base même en cas
+d’interruption ou d’échec partiel du pipeline.</p>
+</section>
+</section>
+<section id="garanties-apportees-par-cette-strategie">
+<h3>Garanties apportées par cette stratégie<a class="headerlink" href="#garanties-apportees-par-cette-strategie" title="Lien vers cette rubrique"></a></h3>
+<p>Cette stratégie d’ingestion permet :</p>
+<ul class="simple">
+<li><p>des <strong>ré-exécutions idempotentes</strong> du pipeline,</p></li>
+<li><p>une <strong>ingestion incrémentale</strong> des nouvelles offres,</p></li>
+<li><p>la <strong>mise à jour contrôlée</strong> des offres existantes,</p></li>
+<li><p>le respect de l’intégrité référentielle,</p></li>
+<li><p>une <strong>reproductibilité complète</strong> du processus d’ingestion.</p></li>
+</ul>
+<p>Elle constitue le socle technique sur lequel reposent
+l’API REST et les analyses ultérieures.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="preprocessing.html" class="btn btn-neutral float-left" title="Prétraitement et normalisation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="django_api.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2026, Linh Dinh.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

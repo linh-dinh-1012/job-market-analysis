@@ -1,0 +1,17 @@
+Glossaire
+=========
+
+API REST
+  Interface HTTP exposant des ressources (JSON) via des endpoints.
+
+Django REST Framework
+  Outil pour construire une API REST sur Django (serializers, viewsets, permissions).
+
+Reproductibilité
+  Capacité à relancer les pipelines/analyses et obtenir les mêmes résultats (à données identiques).
+
+Similarité sémantique
+  Mesure de proximité entre textes (ici : intitulés de poste), souvent via vecteurs et cosine similarity.
+
+RLS
+  Row-Level Security : politiques de sécurité définissant l’accès ligne par ligne dans une table.
